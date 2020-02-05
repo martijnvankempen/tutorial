@@ -14,6 +14,8 @@ services:
      context: .
      dockerfile: docker/php/Dockerfile
    container_name: tutorial-php
+   links:
+    - redis
    volumes:
      - "./app/:/usr/src/app"
   nginx:
@@ -26,3 +28,8 @@ services:
       - "80:80"
     depends_on:
      - php
+  redis:
+    container_name: tutorial-redis
+    image: redis:5
+    ports:
+     - "6379:6379"
