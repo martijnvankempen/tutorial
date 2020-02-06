@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  mysql:
+    container_name: tutorial-mysql
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tutorial 
+  php:
+   build:
+     context: .
+     dockerfile: docker/php/Dockerfile
+   container_name: tutorial-php
+   links:
+    - redis
+   volumes:
+     - "./app/:/usr/src/app"
+  nginx:
+    container_name: tutorial-nginx
+    image: nginx:1.15.3
+    volumes:
+      - "./app/:/usr/src/app"
+      - "./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro"
+    ports:
+      - "80:80"
+    depends_on:
+     - php
+  redis:
+    container_name: tutorial-redis
+    image: redis:5
+    ports:
+     - "6379:6379"
