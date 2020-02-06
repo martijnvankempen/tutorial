@@ -22,7 +22,7 @@ final class Version20200205185009 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        for ($x = 0; $x <= 1000; $x++) {
+        for ($x = 1; $x <= 1000; $x++) {
             $this->addSql(sprintf('INSERT INTO car (number_of_doors, license_plate) VALUES(4, "AA-AA-%d")', $x));
         }
     }

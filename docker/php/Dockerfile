@@ -25,7 +25,3 @@ RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
 RUN git config --global user.email "you@example.com"
 RUN git config --global user.name "Your Name"
-
-#RUN symfony new tutorial-application
-
-#CMD tail -f /dev/null

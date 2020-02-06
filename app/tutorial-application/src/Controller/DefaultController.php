@@ -50,8 +50,8 @@ class DefaultController extends AbstractController
 
         $json = json_encode($carData);
 
-		$response = new Response($json);
-		$response->headers->set('Content-Type', 'text/json');
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'text/json');
 
         $client->set($cacheEntryIdentifier, base64_encode($json));
         $client->expire($cacheEntryIdentifier, 10);
