@@ -127,3 +127,43 @@ You can measure the performance impact of the Redis caching when using an applic
 https://www.postman.com/downloads/
 
 When you execute a GET request to localhost:80 via Postman you can see the response time. The first GET request will take += 250ms. The second time that you access the GET call (within 10 seconds) you can see that the response time decreased to +=110 ms. This difference will only get bigger when your database has more than 1000 records.
+
+### Updating the TTL of the cache entry
+Open the DefaultController and go to line 57. The second parameter of the method expire is the ttl of the cache entry in seconds.
+├── app/
+│   └── tutorial-application/
+│       └── src/
+│           └── Controller/
+│               └── DefaultController.php
+
+### Using Redis CLI
+#### Display the cached keys in Redis container
+You can view the cached keys inside the Redis container.
+1) Enter the Redis container via: docker exec -it tutorial-redis bash
+2) Type: redis-cli and hit enter
+
+#### List available keys
+You can list all keys in Redis that match a certain pattern. You can list the keys used by the sample project by executing:
+KEYS cache-entry. This will list all keys matching the cache-entry pattern. 
+
+#### Get value of key
+You can list the value of our key by executing: get cache-entry
+This will output a base64 string of our JSON response. 
+
+### Troubleshoot
+#### Fatal error
+When opening localhost:80 in your browser or when migrating the database data you get one of the errors displayed below. This could be happing fot two reasons:
+1) Your dependencies were not downloaded correctly
+  1.1) Enter the docker-php container by executing the following command: docker exec -it tutorial-php bash
+  1.2) After entering the command go to the tutorial-application directory using the following command: cd tutorial-application/
+  1.3) Download the dependencies using: composer update
+  1.4) Now the dependencies are downloaded and the error should be fixed
+2) Your volume was not mounted correctly
+  2.1) When you use Docker Desktop for Windows you should make sure that your drives are shared. The following link will explain how to do so: https://token2shell.com/howto/docker/sharing-windows-folders-with-containers/
+
+Fatal error: require(): Failed opening required '/usr/src/app/tutorial-application/vendor/autoload.php' (include_path='.:/usr/local/lib/php') in /usr/src/app/tutorial-application/config/bootstrap.php on line 5
+
+Warning: require(/usr/src/app/tutorial-application/vendor/autoload.php): failed to open stream: No such file or directory in /usr/src/app/tutorial-application/config/bootstrap.php on line 5
+
+#### Redis CLI get cache-entry returns (nil)
+After you entered your Redis container and executed redis-cli you execute get cache-entry but it returned (nil). This happends because the TTL of the cache entry has passed. You can go to localhost:80 so a new cache entry is created or you update the TTL in the DefaultController. The get command will return (nil) when no data is cached.
